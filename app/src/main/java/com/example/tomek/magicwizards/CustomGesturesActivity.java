@@ -58,7 +58,7 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
         else
         {
             //Log.d("Test", "Za slaby wyni kalbo nie ma gestow (" + predictions.size() + ")");
-            // TODO Zmienić na int
+            // TODO Zmienić na Integer
             resultView.setText("0");
         }
     }
