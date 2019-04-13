@@ -7,24 +7,41 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.gesture.Prediction;
-import android.util.Log;
+
 import android.widget.TextView;
-import android.widget.Toast;
+
 import android.gesture.Gesture;
 import java.util.ArrayList;
+
 
 public class CustomGesturesActivity extends AppCompatActivity implements OnGesturePerformedListener
 {
     private GestureLibrary gLibrary;
+    private MyGLSurfaceView gLView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         //Log.d("Test", "PRESTART");
         super.onCreate(savedInstanceState);
+        //gLView = new MyGLSurfaceView(this);
         setContentView(R.layout.activity_main);
+        //setContentView(gLView);
         //Log.d("Test", "START");
+        gLView = findViewById(R.id.openGLOverlay);
         gestureSetup();
+    }
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        gLView.onPause();
+    }
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        gLView.onResume();
     }
 
     private void gestureSetup() {
@@ -62,4 +79,6 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
             resultView.setText("0");
         }
     }
+
+
 }

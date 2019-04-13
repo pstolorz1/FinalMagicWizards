@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".CustomGesturesActivity">
 
+
+
+    <com.example.tomek.magicwizards.MyGLSurfaceView
+        android:id="@+id/openGLOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <android.gesture.GestureOverlayView
         android:id="@+id/gOverlay"
         android:layout_width="0dp"
@@ -15,12 +26,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
-        <TextView
-            android:id="@+id/resultText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text=""
-            android:textSize="30sp" />
     </android.gesture.GestureOverlayView>
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text=""
+        android:textSize="30sp" />
 </android.support.constraint.ConstraintLayout>
