@@ -3,6 +3,8 @@ package com.example.tomek.magicwizards;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 
 class MyGLSurfaceView extends GLSurfaceView
 {
@@ -27,5 +29,6 @@ class MyGLSurfaceView extends GLSurfaceView
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(new MyGLRenderer());
     }
+
 
 }
