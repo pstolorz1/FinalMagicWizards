@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 
 class MyGLSurfaceView extends GLSurfaceView
 {
-
+    public MyGLRenderer myRenderer;
     public MyGLSurfaceView(Context context){
         super(context);
 
@@ -17,7 +17,8 @@ class MyGLSurfaceView extends GLSurfaceView
         setPreserveEGLContextOnPause(true);
         //setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(new MyGLRenderer());
+        myRenderer = new MyGLRenderer();
+        setRenderer(myRenderer);
     }
     public MyGLSurfaceView(Context context, AttributeSet attrSet){
         super(context,attrSet);
@@ -27,7 +28,8 @@ class MyGLSurfaceView extends GLSurfaceView
         setPreserveEGLContextOnPause(true);
         //setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(new MyGLRenderer());
+        myRenderer = new MyGLRenderer();
+        setRenderer(myRenderer);
     }
 
 

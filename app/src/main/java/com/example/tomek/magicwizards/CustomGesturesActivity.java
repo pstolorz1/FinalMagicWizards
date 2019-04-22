@@ -9,9 +9,8 @@ import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.gesture.Prediction;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.widget.TextView;
 
 import android.gesture.Gesture;
@@ -31,6 +30,8 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
         //Log.d("Test", "PRESTART");
         super.onCreate(savedInstanceState);
         //gLView = new MyGLSurfaceView(this);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         //setContentView(gLView);
         //Log.d("Test", "START");
@@ -68,8 +69,14 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture)
     {
         List<GestureStroke> gs = gesture.getStrokes();
-        //resultView.setText(Float.toString(gs.get(0).points[0]));
-        String msg = gs.get(0).points.length + "|" + gs.get(0).points[0] + " " + gs.get(0).points[1];
+        //resultView.setText(Float.toString(gs.get(0).points[1]));
+        Vec2 test = gLView.myRenderer.GetWorldCoords(new Vec2(gs.get(0).points[gs.get(0).points.length-2],gs.get(0).points[gs.get(0).points.length-1]));
+        gLView.myRenderer.X2 = test.X();
+        gLView.myRenderer.Y2 = test.Y();
+        String msg = gs.get(0).points[0] + " " + gs.get(0).points[1];
+        test = gLView.myRenderer.GetWorldCoords(new Vec2(gs.get(0).points[0],gs.get(0).points[1]));
+        resultView.setText(test.toString());
+
         Log.d("test",msg);
         ArrayList<Prediction> predictions = gLibrary.recognize(gesture);
 
