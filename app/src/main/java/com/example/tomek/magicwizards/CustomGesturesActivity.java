@@ -11,6 +11,8 @@ import android.gesture.Prediction;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 
 import android.gesture.Gesture;
@@ -23,6 +25,8 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
     private GestureLibrary gLibrary;
     private MyGLSurfaceView gLView;
     private TextView resultView;
+    View test;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,6 +41,20 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
         //Log.d("Test", "START");
         gLView = findViewById(R.id.openGLOverlay);
         resultView = findViewById(R.id.resultText);
+        test = findViewById(R.id.gOverlay);
+        test.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                // Interpret MotionEvent data
+                resultView.setText("fs");
+                // Handle touch here
+
+                return true;
+
+            }
+        });
         gestureSetup();
     }
     @Override
@@ -70,14 +88,15 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
     {
         List<GestureStroke> gs = gesture.getStrokes();
         //resultView.setText(Float.toString(gs.get(0).points[1]));
-        Vec2 test = gLView.myRenderer.GetWorldCoords(new Vec2(gs.get(0).points[gs.get(0).points.length-2],gs.get(0).points[gs.get(0).points.length-1]));
-        gLView.myRenderer.X2 = test.X();
-        gLView.myRenderer.Y2 = test.Y();
-        String msg = gs.get(0).points[0] + " " + gs.get(0).points[1];
-        test = gLView.myRenderer.GetWorldCoords(new Vec2(gs.get(0).points[0],gs.get(0).points[1]));
-        resultView.setText(test.toString());
+        gLView.myRenderer.NewTrail(gs.get(0).points);
+        //Vec2 test = gLView.myRenderer.GetWorldCoords(new Vec2(gs.get(0).points[gs.get(0).points.length-2],gs.get(0).points[gs.get(0).points.length-1]));
+        //gLView.myRenderer.X2 = test.X();
+        //gLView.myRenderer.Y2 = test.Y();
+        //String msg = gs.get(0).points[0] + " " + gs.get(0).points[1];
+        //test = gLView.myRenderer.GetWorldCoords(new Vec2(gs.get(0).points[0],gs.get(0).points[1]));
+        //resultView.setText(test.toString());
 
-        Log.d("test",msg);
+        //Log.d("test",msg);
         ArrayList<Prediction> predictions = gLibrary.recognize(gesture);
 
         // TODO Zależność między "czarem", a progiem rozpoznawania (prediction.score)

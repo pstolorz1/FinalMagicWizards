@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -25,8 +28,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     private final float[] mTranslationMatrix = new float[16];
     public static volatile float mAngle;
     public int screenHeight, screenWidth;
-    public float X, Y;
-    public float X2, Y2;
+    //public float X, Y;
+    //public float X2, Y2;
+    int sqNumber = 6;
+    public List<Vec2> trail = new ArrayList<>();
+    public List<Square> symbols = new ArrayList<>();
+    boolean showThem = false;
     public static float getAngle() {
         return mAngle;
     }
@@ -35,19 +42,48 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         mAngle = angle;
     }
 
-
+    public void NewTrail(float[] positions)
+    {
+        //trail.clear();
+        int pointsNumber = positions.length;
+        Log.d("wtf", pointsNumber + "");
+        // dzielimy gest na 4 czesci
+        int xPos = pointsNumber / sqNumber;
+        if(xPos % 2 == 1) xPos--;
+        for (int i = 0; i < sqNumber-1; i++)
+        {
+            Log.d("wtf", (xPos*i) + " " + (xPos*i+1));
+            trail.get(i).Set(GetWorldCoords(new Vec2(positions[xPos*i], positions[xPos*i+1])));
+            //Log.d("wtf", "przed: " + positions[xPos*i] + " " + positions[xPos*i+1]);
+            //Log.d("wtf", "po: "+trail.get(i).X() + " " + trail.get(i).Y());
+        }
+        trail.get(sqNumber-1).Set(GetWorldCoords(new Vec2(positions[positions.length-2], positions[positions.length-1])));
+        /*trail.get(1).Set(GetWorldCoords(new Vec2(positions[xPos], positions[xPos+1])));
+        trail.get(2).Set(GetWorldCoords(new Vec2(positions[xPos*2], positions[xPos*2+1])));
+        trail.get(3).Set(GetWorldCoords(new Vec2(positions[xPos*3], positions[xPos*3+1])));
+        trail.get(4).Set(GetWorldCoords(new Vec2(positions[positions.length-2], positions[positions.length-1])));*/
+        showThem = true;
+    }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
         GLES20.glClearColor(1.0f, 0.2f, 0.2f, 1.0f);
-        mSquare = new Square(0.5f);
-        mSquare2 = new Square(0.5f);
-        mSquare2.setColor(0.5f,0.3f,1);
+        //mSquare = new Square(0.5f);
+        //mSquare2 = new Square(0.5f);
+        //mSquare2.setColor(0.5f,0.3f,1);
         mTriangle = new Triangle();
-        X = 0.2f;
+        /*X = 0.2f;
         Y = 0.1f;
         X2 = -0.2f;
-        Y2 = 0.1f;
+        Y2 = 0.1f;*/
+        mSquare = new Square(0.3f);
+        for (int i = 0; i < sqNumber; i++)
+        {
+            symbols.add(new Square(0.3f));
+            //symbols.get(i).setColor(0,0.2f + (i * 0.1f),0);
+            trail.add(new Vec2(0,0));
+        }
+        //symbols.get(0).setColor(0,0.2f + (0 * 0.1f),0);
     }
 
     public void onDrawFrame(GL10 gl)
@@ -55,41 +91,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         float[] scratch = new float[16];
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-
-        Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-        // Create a rotation transformation for the triangle
-        long time = SystemClock.uptimeMillis() % 4000L;
-        float angle = 0.090f * ((int) time);
-        Matrix.setRotateM(rotationMatrix, 0, angle, 0, 0, -1.0f);
-        Matrix.translateM(viewMatrix, 0, X, Y, 0);
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-        // Combine the rotation matrix with the projection and camera view
-        // Note that the vPMatrix factor *must be first* in order
-        // for the matrix multiplication product to be correct.
-        Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0);
-        mSquare2.draw(scratch);
-        //gl.glTranslatef(0,1f,0);
-
-        Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-        // Create a rotation transformation for the triangle
-        //long time = SystemClock.uptimeMillis() % 4000L;
-        //float angle = 0.090f * ((int) time);
-        Matrix.setRotateM(rotationMatrix, 0, mAngle, 0, 0, -1.0f);
-        //Matrix.translateM(mTranslationMatrix, 0, 0.0f, 0.0f, 0);
-        Matrix.translateM(viewMatrix, 0, X2, Y2, 0);
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-        // Combine the rotation matrix with the projection and camera view
-        // Note that the vPMatrix factor *must be first* in order
-        // for the matrix multiplication product to be correct.
-        Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0);
-        //Matrix.multiplyMM(scratch, 0, vPMatrix, 0, mTranslationMatrix, 0);
-        // Draw triangle
-        //mSquare.SetColor(0.1f);
-        mSquare.draw(scratch);
+        /*long time = SystemClock.uptimeMillis() % 4000L;
+        float angle = 0.090f * ((int) time);*/
+        if(showThem)
+        {
+            for (int i = 0; i < symbols.size(); i++)
+            {
+                Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+                Matrix.setRotateM(rotationMatrix, 0, 0, 0, 0, -1.0f);
+                Matrix.translateM(viewMatrix, 0, trail.get(i).X(), trail.get(i).Y(), 0);
+                Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+                Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0);
+                symbols.get(i).draw(scratch);
+                //mSquare.draw(scratch);
+            }
+        }
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height)
@@ -119,7 +135,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
 
     public Vec2 GetWorldCoords( Vec2 touch)
     {
-        Log.d("World coords", "Hello There");
+        //Log.d("World coords", "Hello There");
         // Initialize auxiliary variables.
         Vec2 worldPos = new Vec2(0,0);
 
@@ -194,8 +210,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         worldPos.SetY(touch.Y() / screenH);
 
         worldPos.Set(worldPos.X() * -2 + ratio,worldPos.Y() * -2 + 1 );
-        X = worldPos.X();
-        Y = worldPos.Y();
+        //X = worldPos.X();
+        //Y = worldPos.Y();
         return worldPos;
 
 

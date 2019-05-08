@@ -21,6 +21,11 @@ public class Vec2
         x = xPos;
         y = yPos;
     }
+    public void Set(Vec2 v)
+    {
+        x = v.X();
+        y = v.Y();
+    }
     public void SetX(float xPos)
     {
         x = xPos;
