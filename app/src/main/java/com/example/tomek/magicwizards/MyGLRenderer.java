@@ -30,7 +30,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     public int screenHeight, screenWidth;
     //public float X, Y;
     //public float X2, Y2;
-    int sqNumber = 6;
+    int instantiateNumber = 20;  //70
+    int sqNumber = 20;
     public List<Vec2> trail = new ArrayList<>();
     public List<Square> symbols = new ArrayList<>();
     boolean showThem = false;
@@ -42,29 +43,87 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         mAngle = angle;
     }
 
-    public void NewTrail(float[] positions)
+    public void NewTrail(float[] positions, float trailLength)
     {
+        //sqNumber = 70;
+        // obliczamy dlugosc po ktorej umeiszczamy kolejny efekt
+        float distanceBetweenEffects = trailLength / sqNumber;
+        Log.d("--WTF--","tl " + trailLength + "dbe " + distanceBetweenEffects);
         //trail.clear();
-        int pointsNumber = positions.length;
-        Log.d("wtf", pointsNumber + "");
+        trail.get(0).Set(GetWorldCoords(new Vec2(positions[0], positions[1]))); // początek
+
+        float currUnusedLength = 0f;
+        int effects = 1;
+        for (int i = 2; i < positions.length; i=i+2)
+        {
+            // reszta odl. z poprzednich punktow + dystans miedzy tym pkt a poprzednim
+            Vec2 A = new Vec2(positions[i-2],positions[i-1]);
+            Vec2 B = new Vec2(positions[i],positions[i+1]);
+            float distanceBetweenPoints = GetPointsDistance(A,B);
+            currUnusedLength = currUnusedLength + distanceBetweenPoints;
+            if(currUnusedLength > distanceBetweenEffects)
+            {
+                //  jest wiekszy od odleglosci miedzy kolejnymi efektami, oznacza to ze
+                // juz nie czas na umieszczenie kolejnego efektu
+                float d = distanceBetweenPoints - (currUnusedLength-distanceBetweenEffects);
+                float Xac = d * (B.X()-A.X())/distanceBetweenPoints;
+                float Yac = d * (B.Y()-A.Y())/distanceBetweenPoints;
+                Log.d("WTF","PROCENT:   " + d);
+                Log.d("WTF","A = X " + A.X() + "Y " + A.Y());
+                Log.d("WTF","B = X " + B.X() + "Y " + B.Y());
+                Log.d("WTF","C = X " + A.X()+Xac + "Y " + A.Y()+Yac);
+                if(effects < instantiateNumber)trail.get(effects).Set(GetWorldCoords(new Vec2(A.X()+Xac, A.Y()+Yac)));
+                else break;
+                /*if(A.X() == B.X())
+                {
+                    if(A.Y() > B.Y()) trail.get(effects).Set(GetWorldCoords(new Vec2( A.X(), A.Y()+r)));
+                    else trail.get(effects).Set(GetWorldCoords(new Vec2( A.X(), A.Y()-r)));
+                }
+                else
+                {
+                    float a = (B.Y() - A.Y()) / (B.X() - A.X());
+                    float b = A.Y() - a * A.X();
+
+
+                }*/
+                // S(x1+x2/4,y1+y2/4)
+                effects++;
+                currUnusedLength = (currUnusedLength-distanceBetweenEffects);
+            }
+        }
+        if(effects <= instantiateNumber)sqNumber = effects;
+        else sqNumber = instantiateNumber;
+        showThem = true;
+        //trail.clear();
+        /*int pointsNumber = positions.length;
+        //Log.d("wtf", pointsNumber + "");
         // dzielimy gest na 4 czesci
         int xPos = pointsNumber / sqNumber;
         if(xPos % 2 == 1) xPos--;
+        if(xPos == 0) xPos = 2;
         for (int i = 0; i < sqNumber-1; i++)
         {
             Log.d("wtf", (xPos*i) + " " + (xPos*i+1));
+            if((xPos*i) >= pointsNumber || xPos*i+1 >= pointsNumber)
+            {
+                sqNumber = i + 1;
+                break;
+            }
             trail.get(i).Set(GetWorldCoords(new Vec2(positions[xPos*i], positions[xPos*i+1])));
             //Log.d("wtf", "przed: " + positions[xPos*i] + " " + positions[xPos*i+1]);
             //Log.d("wtf", "po: "+trail.get(i).X() + " " + trail.get(i).Y());
         }
         trail.get(sqNumber-1).Set(GetWorldCoords(new Vec2(positions[positions.length-2], positions[positions.length-1])));
-        /*trail.get(1).Set(GetWorldCoords(new Vec2(positions[xPos], positions[xPos+1])));
-        trail.get(2).Set(GetWorldCoords(new Vec2(positions[xPos*2], positions[xPos*2+1])));
-        trail.get(3).Set(GetWorldCoords(new Vec2(positions[xPos*3], positions[xPos*3+1])));
-        trail.get(4).Set(GetWorldCoords(new Vec2(positions[positions.length-2], positions[positions.length-1])));*/
-        showThem = true;
+        //trail.get(1).Set(GetWorldCoords(new Vec2(positions[xPos], positions[xPos+1])));
+        //trail.get(2).Set(GetWorldCoords(new Vec2(positions[xPos*2], positions[xPos*2+1])));
+        //trail.get(3).Set(GetWorldCoords(new Vec2(positions[xPos*3], positions[xPos*3+1])));
+        //trail.get(4).Set(GetWorldCoords(new Vec2(positions[positions.length-2], positions[positions.length-1])));
+        showThem = true;*/
     }
-
+    public float GetPointsDistance(Vec2 a, Vec2 b)
+    {
+        return (float)Math.sqrt(Math.pow((b.X()-a.X()), 2) + Math.pow((b.Y()-a.Y()), 2));
+    }
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
         GLES20.glClearColor(1.0f, 0.2f, 0.2f, 1.0f);
@@ -76,11 +135,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         Y = 0.1f;
         X2 = -0.2f;
         Y2 = 0.1f;*/
-        mSquare = new Square(0.3f);
-        for (int i = 0; i < sqNumber; i++)
+        mSquare = new Square(0.1f);
+        for (int i = 0; i < instantiateNumber; i++)
         {
-            symbols.add(new Square(0.3f));
-            //symbols.get(i).setColor(0,0.2f + (i * 0.1f),0);
+            symbols.add(new Square(0.15f));
+            symbols.get(i).setColor(0, (i * 0.015f),0);
             trail.add(new Vec2(0,0));
         }
         //symbols.get(0).setColor(0,0.2f + (0 * 0.1f),0);
@@ -91,14 +150,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         float[] scratch = new float[16];
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        /*long time = SystemClock.uptimeMillis() % 4000L;
-        float angle = 0.090f * ((int) time);*/
+        long time = SystemClock.uptimeMillis() % 4000L;
+        float angle = 0.090f * ((int) time);
         if(showThem)
         {
-            for (int i = 0; i < symbols.size(); i++)
+            for (int i = 0; i < sqNumber; i++)
             {
                 Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-                Matrix.setRotateM(rotationMatrix, 0, 0, 0, 0, -1.0f);
+                Matrix.setRotateM(rotationMatrix, 0, angle, 0, 0, -1.0f);
                 Matrix.translateM(viewMatrix, 0, trail.get(i).X(), trail.get(i).Y(), 0);
                 Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
                 Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0);
@@ -135,86 +194,18 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
 
     public Vec2 GetWorldCoords( Vec2 touch)
     {
-        //Log.d("World coords", "Hello There");
-        // Initialize auxiliary variables.
         Vec2 worldPos = new Vec2(0,0);
 
-        // SCREEN height & width (ej: 320 x 480)
-
-
-
-
-
-        //touch.Set(0,160);
         float screenW = screenWidth;
         float screenH = screenHeight;
-
-        /*Log.d("World coords", Float.toString(screenW));
-        Log.d("World coords", Float.toString(screenH));
-        // Auxiliary matrix and vectors
-        // to deal with ogl.
-        float[] invertedMatrix, transformMatrix,
-                normalizedInPoint, outPoint;
-        invertedMatrix = new float[16];
-        transformMatrix = new float[16];
-        normalizedInPoint = new float[4];
-        outPoint = new float[4];
-
-        // Invert y coordinate, as android uses
-        // top-left, and ogl bottom-left.
-        int oglTouchY = (int) (screenH - touch.Y());
-
-       // Transform the screen point to clip
-       //space in ogl (-1,1)
-        normalizedInPoint[0] =
-                (float) ((touch.X()) * 2.0f / screenW - 1.0);
-        normalizedInPoint[1] =
-                (float) ((oglTouchY) * 2.0f / screenH - 1.0);
-        normalizedInPoint[2] = - 1.0f;
-        normalizedInPoint[3] = 1.0f;
-        Log.d("World coords", Float.toString(normalizedInPoint[0]));
-        Log.d("World coords", Float.toString(normalizedInPoint[1]));
-        Log.d("World coords", Float.toString(normalizedInPoint[2]));
-        Log.d("World coords", Float.toString(normalizedInPoint[3]));
-       //Obtain the transform matrix and
-       //then the inverse.
-        Matrix.multiplyMM(
-                transformMatrix, 0,
-                projectionMatrix, 0,
-                viewMatrix, 0);
-        Matrix.invertM(invertedMatrix, 0,
-                transformMatrix, 0);
-        Log.d("World coords", "Hello There");
-        Matrix.multiplyMV(
-                outPoint, 0,
-                invertedMatrix, 0,
-                normalizedInPoint, 0);
-        Log.d("World coords", "jest blad???");
-        if (outPoint[3] == 0.0)
-        {
-            // Avoid /0 error.
-            Log.d("World coords", "ERROR!");
-            return worldPos;
-        }
-        Log.d("World coords", Float.toString(outPoint[0]));
-        Log.d("World coords", Float.toString(outPoint[1]));
-        Log.d("World coords", Float.toString(outPoint[2]));
-        Log.d("World coords", Float.toString(outPoint[3]));
-        // Divide by the 3rd component to find
-        // out the real position.
-        worldPos.Set(
-                outPoint[0] / outPoint[3],
-                outPoint[1] / outPoint[3]);*/
         float ratio = screenW/screenH;
+
         worldPos.SetX(touch.X()/screenW * ratio);
         worldPos.SetY(touch.Y() / screenH);
 
         worldPos.Set(worldPos.X() * -2 + ratio,worldPos.Y() * -2 + 1 );
-        //X = worldPos.X();
-        //Y = worldPos.Y();
+
         return worldPos;
-
-
     }
 
 }

@@ -63,6 +63,9 @@ public class Square
     }
     public void setColor(float R,float G,float B)
     {
+        if(R >= 1.0f) R = 1.0f;
+        if(G >= 1.0f) G = 1.0f;
+        if(B >= 1.0f) B = 1.0f;
         colorR = R;
         colorG = G;
         colorB = B;
