@@ -18,8 +18,9 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer
 {
-    private Square mSquare,mSquare2;
-    Triangle mTriangle;
+    //private Square mSquare,mSquare2;
+    //Triangle mTriangle;
+    Star bigStar;
     // vPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
@@ -29,12 +30,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     public static volatile float mAngle;
     public int screenHeight, screenWidth;
     //public float X, Y;
-    //public float X2, Y2;
+    Vec2 starPos;
     int instantiateNumber = 20;  //70
     int sqNumber = 20;
+    float scaleFactor = 1.0f;
+    float alphaFactor = 0.0f;
     public List<Vec2> trail = new ArrayList<>();
-    public List<Square> symbols = new ArrayList<>();
-    boolean showThem = false;
+    public List<Star> symbols = new ArrayList<>();
+    boolean showThem = false, showBigStar = false;
     public static float getAngle() {
         return mAngle;
     }
@@ -45,12 +48,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
 
     public void NewTrail(float[] positions, float trailLength)
     {
-        //sqNumber = 70;
         // obliczamy dlugosc po ktorej umeiszczamy kolejny efekt
         float distanceBetweenEffects = trailLength / sqNumber;
         Log.d("--WTF--","tl " + trailLength + "dbe " + distanceBetweenEffects);
         //trail.clear();
-        trail.get(0).Set(GetWorldCoords(new Vec2(positions[0], positions[1]))); // początek
+        trail.get(0).Set(getWorldCoords(new Vec2(positions[0], positions[1]))); // początek
 
         float currUnusedLength = 0f;
         int effects = 1;
@@ -68,25 +70,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
                 float d = distanceBetweenPoints - (currUnusedLength-distanceBetweenEffects);
                 float Xac = d * (B.X()-A.X())/distanceBetweenPoints;
                 float Yac = d * (B.Y()-A.Y())/distanceBetweenPoints;
-                Log.d("WTF","PROCENT:   " + d);
-                Log.d("WTF","A = X " + A.X() + "Y " + A.Y());
-                Log.d("WTF","B = X " + B.X() + "Y " + B.Y());
-                Log.d("WTF","C = X " + A.X()+Xac + "Y " + A.Y()+Yac);
-                if(effects < instantiateNumber)trail.get(effects).Set(GetWorldCoords(new Vec2(A.X()+Xac, A.Y()+Yac)));
+
+                if(effects < instantiateNumber)trail.get(effects).Set(getWorldCoords(new Vec2(A.X()+Xac, A.Y()+Yac)));
                 else break;
-                /*if(A.X() == B.X())
-                {
-                    if(A.Y() > B.Y()) trail.get(effects).Set(GetWorldCoords(new Vec2( A.X(), A.Y()+r)));
-                    else trail.get(effects).Set(GetWorldCoords(new Vec2( A.X(), A.Y()-r)));
-                }
-                else
-                {
-                    float a = (B.Y() - A.Y()) / (B.X() - A.X());
-                    float b = A.Y() - a * A.X();
 
-
-                }*/
-                // S(x1+x2/4,y1+y2/4)
                 effects++;
                 currUnusedLength = (currUnusedLength-distanceBetweenEffects);
             }
@@ -94,59 +81,46 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         if(effects <= instantiateNumber)sqNumber = effects;
         else sqNumber = instantiateNumber;
         showThem = true;
-        //trail.clear();
-        /*int pointsNumber = positions.length;
-        //Log.d("wtf", pointsNumber + "");
-        // dzielimy gest na 4 czesci
-        int xPos = pointsNumber / sqNumber;
-        if(xPos % 2 == 1) xPos--;
-        if(xPos == 0) xPos = 2;
-        for (int i = 0; i < sqNumber-1; i++)
-        {
-            Log.d("wtf", (xPos*i) + " " + (xPos*i+1));
-            if((xPos*i) >= pointsNumber || xPos*i+1 >= pointsNumber)
-            {
-                sqNumber = i + 1;
-                break;
-            }
-            trail.get(i).Set(GetWorldCoords(new Vec2(positions[xPos*i], positions[xPos*i+1])));
-            //Log.d("wtf", "przed: " + positions[xPos*i] + " " + positions[xPos*i+1]);
-            //Log.d("wtf", "po: "+trail.get(i).X() + " " + trail.get(i).Y());
-        }
-        trail.get(sqNumber-1).Set(GetWorldCoords(new Vec2(positions[positions.length-2], positions[positions.length-1])));
-        //trail.get(1).Set(GetWorldCoords(new Vec2(positions[xPos], positions[xPos+1])));
-        //trail.get(2).Set(GetWorldCoords(new Vec2(positions[xPos*2], positions[xPos*2+1])));
-        //trail.get(3).Set(GetWorldCoords(new Vec2(positions[xPos*3], positions[xPos*3+1])));
-        //trail.get(4).Set(GetWorldCoords(new Vec2(positions[positions.length-2], positions[positions.length-1])));
-        showThem = true;*/
+        showBigStar = false;
     }
     public float GetPointsDistance(Vec2 a, Vec2 b)
     {
         return (float)Math.sqrt(Math.pow((b.X()-a.X()), 2) + Math.pow((b.Y()-a.Y()), 2));
     }
-    public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+    public void ShowStar(float x, float y)
+    {
+        if(!showBigStar)
+        {
+            starPos = getWorldCoords(new Vec2(x,y));
+            scaleFactor = 1.0f;
+            alphaFactor = 0.0f;
+            showBigStar = true;
+        }
+    }
+    public void onSurfaceCreated(GL10 unused, EGLConfig config)
+    {
         // Set the background frame color
         GLES20.glClearColor(1.0f, 0.2f, 0.2f, 1.0f);
-        //mSquare = new Square(0.5f);
-        //mSquare2 = new Square(0.5f);
-        //mSquare2.setColor(0.5f,0.3f,1);
-        mTriangle = new Triangle();
-        /*X = 0.2f;
-        Y = 0.1f;
-        X2 = -0.2f;
-        Y2 = 0.1f;*/
-        mSquare = new Square(0.1f);
+        //mSquare = ne
+        bigStar = new Star(0.2f);
+        //bigStar.setColor(0,0,1,0.5f);
         for (int i = 0; i < instantiateNumber; i++)
         {
-            symbols.add(new Square(0.15f));
-            symbols.get(i).setColor(0, (i * 0.015f),0);
+            symbols.add(new Star(0.1f));
+            //symbols.get(i).setColor(0, (i * 0.015f),0);
             trail.add(new Vec2(0,0));
         }
-        //symbols.get(0).setColor(0,0.2f + (0 * 0.1f),0);
     }
 
     public void onDrawFrame(GL10 gl)
     {
+        // enable transparency
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        GLES20.glDepthMask(false);
+        //
+
         float[] scratch = new float[16];
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -164,6 +138,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
                 symbols.get(i).draw(scratch);
                 //mSquare.draw(scratch);
             }
+        }
+        if(showBigStar)
+        {
+            Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+            Matrix.setRotateM(rotationMatrix, 0, angle, 0, 0, -1.0f);
+            Matrix.translateM(viewMatrix, 0, starPos.X(), starPos.Y(), 0);
+            Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+            Matrix.scaleM(viewMatrix, 0, scaleFactor, scaleFactor, 0);
+            Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+            Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0);
+            bigStar.setAlpha(1-alphaFactor);
+            bigStar.draw(scratch);
+            scaleFactor += 0.20f;
+            alphaFactor += 0.04f;
+            if(alphaFactor > 0.9f) showBigStar = false;
         }
     }
 
@@ -192,7 +181,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         return shader;
     }
 
-    public Vec2 GetWorldCoords( Vec2 touch)
+    public Vec2 getWorldCoords( Vec2 touch)
     {
         Vec2 worldPos = new Vec2(0,0);
 

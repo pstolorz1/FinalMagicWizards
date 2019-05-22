@@ -2,6 +2,7 @@ package com.example.tomek.magicwizards;
 
 import android.content.Intent;
 import android.gesture.GestureStroke;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;;
 import android.os.Bundle;
 import android.gesture.GestureLibraries;
@@ -64,7 +65,8 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
                 //resultView.setText("CZAS: " + (System.currentTimeMillis() - currTimeInMs));
                 // Handle touch here
                 //if()
-
+                //resultView.setText("CZAS: " + SystemClock.uptimeMillis() % 4000L);
+                gLView.myRenderer.ShowStar(event.getX(),event.getY());
                 return true;
 
             }
