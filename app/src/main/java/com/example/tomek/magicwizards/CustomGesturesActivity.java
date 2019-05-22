@@ -128,33 +128,6 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
         }
     }
 
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.credits:
-                Intent intent1 = new Intent(this,MenuCredits.class);
-                this.startActivity(intent1);
-                return true;
-            case R.id.connect:
-                Intent intent2 = new Intent(this,MenuConnect.class);
-                this.startActivity(intent2);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
     public static void SetOpenGLCooldown()
     {
         currTimeInMs = System.currentTimeMillis();
