@@ -49,7 +49,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     public void NewTrail(float[] positions, float trailLength)
     {
         // obliczamy dlugosc po ktorej umeiszczamy kolejny efekt
-        float distanceBetweenEffects = trailLength / sqNumber;
+        float distanceBetweenEffects = trailLength / instantiateNumber;
         Log.d("--WTF--","tl " + trailLength + "dbe " + distanceBetweenEffects);
         //trail.clear();
         trail.get(0).Set(getWorldCoords(new Vec2(positions[0], positions[1]))); // początek

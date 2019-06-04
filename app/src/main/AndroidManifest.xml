@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".CreditsScene"></activity>
         <activity android:name=".ConnectMenu" />
-        <activity android:name=".CustomGesturesActivity" />
+        <activity android:name=".CustomGesturesActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity
             android:name=".MainMenu"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">

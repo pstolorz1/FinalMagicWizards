@@ -119,7 +119,7 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
             else result *= 15;
             HP -= result;
             //hpView.setText(HP);
-            //resultView.setText(result.toString());
+            resultView.setText(result.toString());
         }
         else
         {
