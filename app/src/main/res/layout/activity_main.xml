@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,24 +14,60 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.gesture.GestureOverlayView
         android:id="@+id/gOverlay"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="624dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
     </android.gesture.GestureOverlayView>
 
     <TextView
         android:id="@+id/resultText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_marginTop="32dp"
+        android:text="OBRAŻENIA GRACZA"
+        app:layout_constraintBottom_toTopOf="@+id/openGLOverlay"
+        app:layout_constraintEnd_toStartOf="@+id/openGLOverlay"
+        app:layout_constraintStart_toEndOf="@+id/openGLOverlay"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/DamageText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text=""
-        android:textSize="30sp" />
+        android:layout_marginTop="20dp"
+        android:text="HP KOMPUTERA"
+        app:layout_constraintEnd_toStartOf="@+id/gOverlay"
+        app:layout_constraintStart_toEndOf="@+id/gOverlay"
+        app:layout_constraintTop_toBottomOf="@+id/resultText" />
+
+    <TextView
+        android:id="@+id/AIText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="OBRAŻENIA KOMPUTERA"
+        app:layout_constraintEnd_toStartOf="@+id/gOverlay"
+        app:layout_constraintStart_toEndOf="@+id/gOverlay"
+        app:layout_constraintTop_toBottomOf="@+id/DamageText" />
+
+    <TextView
+        android:id="@+id/AIDamageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="HP GRACZA"
+        app:layout_constraintEnd_toStartOf="@+id/gOverlay"
+        app:layout_constraintStart_toEndOf="@+id/gOverlay"
+        app:layout_constraintTop_toBottomOf="@+id/AIText" />
+
 </android.support.constraint.ConstraintLayout>

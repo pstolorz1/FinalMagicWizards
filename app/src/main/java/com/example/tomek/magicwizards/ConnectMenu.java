@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class ConnectMenu extends AppCompatActivity {
+public class ConnectMenu extends AI {
 
     private Button startGame;
     private Button joinGame;
@@ -36,10 +36,12 @@ public class ConnectMenu extends AppCompatActivity {
     }
     //Funkcja przenoszaca z jednego activity do drugiego
     public void startGame(){
+        flag=true;
         Intent intent = new Intent(this, CustomGesturesActivity.class);
         startActivity(intent);
     }
     public void joinGame(){
+        flag=false;
         Intent intent = new Intent(this, CustomGesturesActivity.class);
         startActivity(intent);
     }

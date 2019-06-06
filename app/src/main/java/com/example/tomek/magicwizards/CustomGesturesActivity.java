@@ -25,14 +25,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CustomGesturesActivity extends AppCompatActivity implements OnGesturePerformedListener
+public class CustomGesturesActivity extends AI implements OnGesturePerformedListener
 {
     private GestureLibrary gLibrary;
     private MyGLSurfaceView gLView;
     private TextView resultView;
     private TextView hpView;
+    private TextView AIView;
+    private TextView AIDamageView;
+    private TextView DamageView;
     View test;
-    int HP = 1000;
+    int HP = 200;
+    int HP_AI = 200;
     private static long currTimeInMs = 0;
 
 
@@ -49,7 +53,10 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
         //Log.d("Test", "START");
         gLView = findViewById(R.id.openGLOverlay);
         resultView = findViewById(R.id.resultText);
+        AIView = findViewById(R.id.AIText);
         test = findViewById(R.id.gOverlay);
+        AIDamageView = findViewById(R.id.AIDamageText);
+        DamageView = findViewById(R.id.DamageText);
         test.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -117,9 +124,23 @@ public class CustomGesturesActivity extends AppCompatActivity implements OnGestu
             if(predictions.get(0).name == "kwadrat") result *= 5;
             else if(predictions.get(0).name == "trojkat") result *= 4;
             else result *= 15;
-            HP -= result;
+            //HP -= result;
             //hpView.setText(HP);
-            resultView.setText(result.toString());
+            HP_AI=HP_AI-result;
+            resultView.setText("OBRAZENIA GRACZA: " + result.toString());
+            DamageView.setText("HP KOMPUTERA: " + String.valueOf(HP_AI));
+            if(flag)
+            {
+                int hp_tmp=easy();
+                AIView.setText("OBRAZENIA KOMPUTERA: "+ String.valueOf(hp_tmp));
+                HP=HP-hp_tmp;
+                AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));
+            }
+            else{
+                int hp_tmp=hard();
+                AIView.setText("OBRAZENIA KOMPUTERA: " + String.valueOf(hp_tmp));
+                HP=HP-hp_tmp;
+                AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));}
         }
         else
         {
