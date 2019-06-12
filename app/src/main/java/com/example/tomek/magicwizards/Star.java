@@ -7,6 +7,9 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+/**  Klasa rysujaca gwiazdki na wzor narysowanego gestu
+ *
+ */
 public class Star {
     private FloatBuffer vertexBuffer;
     private ShortBuffer drawListBuffer;

@@ -24,7 +24,9 @@ import android.gesture.Gesture;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**  Główna klasa generujaca główny ekran
+ *
+ */
 public class CustomGesturesActivity extends AI implements OnGesturePerformedListener
 {
     private GestureLibrary gLibrary;
@@ -35,8 +37,8 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
     private TextView AIDamageView;
     private TextView DamageView;
     View test;
-    int HP = 200;
-    int HP_AI = 200;
+    int HP = 400;
+    int HP_AI = 400;
     private static long currTimeInMs = 0;
 
 
@@ -142,6 +144,12 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
                 HP=HP-hp_tmp;
                 AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));}
         }
+
+        if(HP<0)
+            setContentView(R.layout.activity_lost);
+        if(HP_AI<0)
+            setContentView(R.layout.activity_win);
+
         else
         {
             // TODO Zmienić na Integer

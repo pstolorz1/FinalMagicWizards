@@ -3,6 +3,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.TextView;
+/**  Klasa reprezentujaca poziomy sztucznej inteligencji
+ *
+ */
 public class AI extends AppCompatActivity {
     static public boolean flag;
     TextView view_data;
@@ -14,7 +17,7 @@ public class AI extends AppCompatActivity {
 
     Integer hard()
     {
-        int x = (int)(Math.random() * 99 + 1);
+        int x = (int)(Math.random() * 49 + 50);
         return(x);
     }
 
