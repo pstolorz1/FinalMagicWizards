@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-/**  Klasa w której wybieramy poziom sztucznej inteligencji
- *
+/**  Klasa w ktorej wybieramy poziom sztucznej inteligencji
+ * @see startGame() Wybor latwego poziomu w menu
+ *  @see joinGame() Wybor trudnego poziomu w menu
  */
 public class ConnectMenu extends AI {
 

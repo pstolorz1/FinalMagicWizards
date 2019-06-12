@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/**  Klasa wyswietlajaca wzory
+ * @see MYGLSurfaceView funkcja obslugujaca biblioteke OpenGl i wyswietlajaca na ekranie narysowanie wzor
+ */
 class MyGLSurfaceView extends GLSurfaceView
 {
     public MyGLRenderer myRenderer;

@@ -24,7 +24,13 @@ import android.gesture.Gesture;
 import java.util.ArrayList;
 import java.util.List;
 
-/**  Główna klasa generujaca główny ekran
+/**  Główna klasa generujaca główny ekran z gra
+ * @param hpView wyswietla zycie gracza
+ * @param AIView wyswietla zycia komputera
+ * @param DamageView wyswietla obrazenia zadane przez gracza
+ * @param AIDamageView wyswietla obrazenia zadane przez komputer
+ * @param predictions okresla podobienstwo z narysowanym przez gracza wzorem
+ *
  *
  */
 public class CustomGesturesActivity extends AI implements OnGesturePerformedListener

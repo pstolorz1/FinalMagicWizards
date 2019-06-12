@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**  Klasa obslugujaca menu
+ * @param pressPlay guzik do wlaczenia gry
+ * @param pressCredits guzik do pokazania tworcow gry
+ */
+
 public class MainMenu extends AppCompatActivity {
 
     private Button pressPlay;

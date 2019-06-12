@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.TextView;
 /**  Klasa reprezentujaca poziomy sztucznej inteligencji
- *
+ * @see easy() Latwy poziom AI
+ * @see hard() Trudny poziom AI
+ * @param x Wartosci, ktore moze losowac komputer w zaleznosci od poziomu trudnosci
  */
 public class AI extends AppCompatActivity {
     static public boolean flag;
