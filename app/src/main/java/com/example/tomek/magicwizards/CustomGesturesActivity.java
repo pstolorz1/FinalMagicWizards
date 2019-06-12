@@ -40,6 +40,7 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
     int HP = 400;
     int HP_AI = 400;
     private static long currTimeInMs = 0;
+    //a
 
 
     @Override
