@@ -6,16 +6,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-/**  Klasa wyswietlajaca wzory
+/**  Klasa przypisujaca klase MyGlRenderer do kontrolki wyświetlajacej jej wnętrze
  *
  */
 class MyGLSurfaceView extends GLSurfaceView
 {
     public MyGLRenderer myRenderer;
 
-/** \brief funkcja obslugujaca biblioteke OpenGl i wyswietlajaca na ekranie narysowanie wzor
- *
- */
+
     public MyGLSurfaceView(Context context){
         super(context);
 
@@ -27,9 +25,6 @@ class MyGLSurfaceView extends GLSurfaceView
         myRenderer = new MyGLRenderer();
         setRenderer(myRenderer);
     }
-    /** \brief funkcja obslugujaca biblioteke OpenGl i wyswietlajaca na ekranie narysowanie wzor
-     *
-     */
     public MyGLSurfaceView(Context context, AttributeSet attrSet){
         super(context,attrSet);
 

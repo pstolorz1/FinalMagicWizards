@@ -15,41 +15,55 @@ import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
+//!  Klasa zajmująca sie wyświetlaniem przy użyciu openGL
+/*!
+  inicjalizacja openGL, rysowanie gwiazdek i obliczanie pozycji w przestrzeni openGL
+*/
 public class MyGLRenderer implements GLSurfaceView.Renderer
 {
-    //private Square mSquare,mSquare2;
-    //Triangle mTriangle;
+    //! gwiazda pojawiająca się co jakiś czas podczas robienia gestu
     Star bigStar;
     // vPMatrix is an abbreviation for "Model View Projection Matrix"
+    //! macierz wynikowa
     private final float[] vPMatrix = new float[16];
+    //! macierz projekcji
     private final float[] projectionMatrix = new float[16];
+    //! macierz widoku
     private final float[] viewMatrix = new float[16];
+    //! macierz rotacji/obrotu
     private float[] rotationMatrix = new float[16];
-    private final float[] mTranslationMatrix = new float[16];
+    //! zmienna przechowująca kąt
     public static volatile float mAngle;
+    //! wysokość i szerokość ekranu
     public int screenHeight, screenWidth;
     //public float X, Y;
+    //! pozycja duzej gwiazdy
     Vec2 starPos;
-    int instantiateNumber = 20;  //70
+    //! liczba małych gwiazdek alokowana przy tworzeniu okna
+    int instantiateNumber = 20;
+    //! ilość gwiazdek do wyświetlenia
     int sqNumber = 20;
+    //! zmienna pomocnicza, w której przechowywana jest skala dużej gwiazdy
     float scaleFactor = 1.0f;
+    //! zmienna pomocnicza, w której przechowywana jest przezroczystość(kanał alpha) dużej gwiazdy
     float alphaFactor = 0.0f;
+    //! lista współrzędnych małych gwiazdek
     public List<Vec2> trail = new ArrayList<>();
+    //! lista obiektów (małych gwiazdek)
     public List<Star> symbols = new ArrayList<>();
-    boolean showThem = false, showBigStar = false;
-    public static float getAngle() {
-        return mAngle;
-    }
+    //! flaga sterujaca wyświetlaniem małych gwiazdek
+    boolean showThem = false;
+    //! flaga sterujaca wyświetlaniem dużej gwiazdki
+    boolean showBigStar = false;
 
-    public static void setAngle(float angle) {
-        mAngle = angle;
-    }
-
+    //! Metoda tworząca nową linię z gwiazdek na podstawie współrzędnych gestu
+    /*!
+      \param positions współrzędne punktów składających się na gest
+      \param trailLength długość gestu
+    */
     public void NewTrail(float[] positions, float trailLength)
     {
         float distanceBetweenEffects = trailLength / instantiateNumber; /**< obliczamy dlugosc po ktorej umeiszczamy kolejny efekt*/
-        Log.d("--WTF--","tl " + trailLength + "dbe " + distanceBetweenEffects);
         //trail.clear();
         trail.get(0).Set(getWorldCoords(new Vec2(positions[0], positions[1]))); // początek
 
@@ -81,10 +95,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         showThem = true;
         showBigStar = false;
     }
+    //! Metoda licząca odległość między punktami w przestrzeni
+    /*!
+      \param a punkt początkowy
+      \param b punkt końcowy
+      \return Odległość między punktami
+    */
     public float GetPointsDistance(Vec2 a, Vec2 b)
     {
         return (float)Math.sqrt(Math.pow((b.X()-a.X()), 2) + Math.pow((b.Y()-a.Y()), 2));
     }
+    //! Metoda, która nakazuje rysowanie gwiazdy w danym punkcie
+    /*!
+      \param x wspołrzędna x gwiazdy
+      \param y wspołrzędna y gwiazdy
+    */
     public void ShowStar(float x, float y)
     {
         if(!showBigStar)
@@ -95,6 +120,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
             showBigStar = true;
         }
     }
+    //! Metoda, w której czyszczony jest ekran i inicjalizowane są wszystkie używane później obiekty
+    /*!
+    */
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
     {
         // Set the background frame color
@@ -110,6 +138,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         }
     }
 
+    //! Metoda, zajmująca sie rysowaniem pojedyńczej klatki
+    /*!
+      \param gl nie używany parametr
+    */
     public void onDrawFrame(GL10 gl)
     {
         // enable transparency
@@ -166,6 +198,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
 
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
     }
+    //! Metoda, wczytująca shader
+    /*!
+      \param type typ shadera
+      \param shaderCode treść shadera
+    */
     public static int loadShader(int type, String shaderCode){
 
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
@@ -179,6 +216,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         return shader;
     }
 
+    //! Metoda, przekształcająca wspołrzędne dotyku na współrzędne w przestrzeni openGL
+    /*!
+      \param touch wspołrzędna punktu na ekranie
+      \return Punkt w przestrzeni openGL
+    */
     public Vec2 getWorldCoords( Vec2 touch)
     {
         Vec2 worldPos = new Vec2(0,0);
