@@ -6,13 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-/**  Klasa obslugujaca menu
+//!  Klasa obslugujaca menu
+/*!
  *
  */
-
 public class MainMenu extends AppCompatActivity {
 
+    //!  guzik do wlaczenia gry
     private Button pressPlay; /**< guzik do wlaczenia gry*/
+    //!  guzik do pokazania tworcow gry
     private Button pressCredits; /**< guzik do pokazania tworcow gry*/
 
     @Override
@@ -36,15 +38,15 @@ public class MainMenu extends AppCompatActivity {
             }
         });
     }
-    /**  Funkcja przenoszaca z jednego activity do drugiego
-     *
+    //!  Funkcja przenoszaca z jednego activity do drugiego
+     /*
      */
     public void openMainMenu(){
         Intent intent = new Intent(this, ConnectMenu.class);
         startActivity(intent);
     }
-    /**  Funkcja przenoszaca z jednego activity do drugiego
-     *
+    //!  Funkcja przenoszaca z jednego activity do drugiego
+     /*
      */
     public void openCredits(){
         Intent intent = new Intent(this, CreditsScene.class);

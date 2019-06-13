@@ -24,15 +24,15 @@ import android.gesture.Gesture;
 import java.util.ArrayList;
 import java.util.List;
 
-/**  Główna klasa generujaca główny ekran z gra
- *
+//!  Glowna klasa generujaca glowny ekran z gra
+/*!
  *
  */
 public class CustomGesturesActivity extends AI implements OnGesturePerformedListener
 {
-    private GestureLibrary gLibrary;
-    private MyGLSurfaceView gLView;
-    private TextView resultView;
+    private GestureLibrary gLibrary; /**< obiekt biblioteki gestow */
+    private MyGLSurfaceView gLView; /**< kontrolka,na ktorej rysowane zostana obiekty openGL*/
+    private TextView resultView; /**< kontrolka pokazujaca wynik wykonania gestu*/
     private TextView hpView; /**< wyswietla zycie gracza*/
     private TextView AIView; /**< wyswietla zycia komputera*/
     private TextView AIDamageView; /**< wyswietla obrazenia zadane przez komputer*/
@@ -40,7 +40,7 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
     View test;
     int HP = 400;
     int HP_AI = 400;
-    private static long currTimeInMs = 0;
+    //private static long currTimeInMs = 0;
     //a
 
 
@@ -85,18 +85,23 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
         gestureSetup();
     }
     @Override
+    //! Funkcja, ktora zatrzymuje dzialanie OpenGl
     protected void onPause()
     {
         super.onPause();
         gLView.onPause();
     }
     @Override
+    //! Funkcja, ktora wznawia dzialanie OpenGl
     protected void onResume()
     {
         super.onResume();
         gLView.onResume();
     }
-
+    //! Skonfigurowanie obsługi gestów
+    /*!
+    Wczytanie pliku z gestami, ustawienie kontrolki wyświetlającej openGL
+    */
     private void gestureSetup() {
         gLibrary =
                 GestureLibraries.fromRawResource(this,
@@ -110,7 +115,11 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
         GestureOverlayView gOverlay = findViewById(R.id.gOverlay);
         gOverlay.addOnGesturePerformedListener(this);
     }
-
+    //! Metoda obslugujaca rozpoznanie gestu
+    /*!
+    /@param overlay kontrolka przechwytujaca gesty
+    /@param gesture przechwycony gest
+    */
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture)
     {
         List<GestureStroke> gs = gesture.getStrokes();
@@ -159,9 +168,9 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
         }
     }
 
-    public static void SetOpenGLCooldown()
+    /*public static void SetOpenGLCooldown()
     {
         currTimeInMs = System.currentTimeMillis();
-    }
+    }*/
 
 }
