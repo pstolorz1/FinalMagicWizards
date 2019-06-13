@@ -7,8 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 /**  Klasa w ktorej wybieramy poziom sztucznej inteligencji
- * @see startGame() Wybor latwego poziomu w menu
- *  @see joinGame() Wybor trudnego poziomu w menu
+ *
  */
 public class ConnectMenu extends AI {
 
@@ -39,11 +38,19 @@ public class ConnectMenu extends AI {
         });
     }
     //Funkcja przenoszaca z jednego activity do drugiego
+
+    /** \brief Wybor latwego poziomu w menu
+     *
+     */
     public void startGame(){
         flag=true;
         Intent intent = new Intent(this, CustomGesturesActivity.class);
         startActivity(intent);
     }
+
+    /** \brief Wybor trudnego poziomu w menu
+     *
+     */
     public void joinGame(){
         flag=false;
         Intent intent = new Intent(this, CustomGesturesActivity.class);

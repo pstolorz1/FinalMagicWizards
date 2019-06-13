@@ -25,11 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**  Główna klasa generujaca główny ekran z gra
- * @param hpView wyswietla zycie gracza
- * @param AIView wyswietla zycia komputera
- * @param DamageView wyswietla obrazenia zadane przez gracza
- * @param AIDamageView wyswietla obrazenia zadane przez komputer
- * @param predictions okresla podobienstwo z narysowanym przez gracza wzorem
  *
  *
  */
@@ -38,10 +33,10 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
     private GestureLibrary gLibrary;
     private MyGLSurfaceView gLView;
     private TextView resultView;
-    private TextView hpView;
-    private TextView AIView;
-    private TextView AIDamageView;
-    private TextView DamageView;
+    private TextView hpView; /**< wyswietla zycie gracza*/
+    private TextView AIView; /**< wyswietla zycia komputera*/
+    private TextView AIDamageView; /**< wyswietla obrazenia zadane przez komputer*/
+    private TextView DamageView; /**< wyswietla obrazenia zadane przez gracza*/
     View test;
     int HP = 400;
     int HP_AI = 400;
@@ -121,7 +116,7 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
         List<GestureStroke> gs = gesture.getStrokes();
         gLView.myRenderer.NewTrail(gs.get(0).points, gs.get(0).length);
         //resultView.setText(gs.get(0).length + " ");
-        ArrayList<Prediction> predictions = gLibrary.recognize(gesture);
+        ArrayList<Prediction> predictions = gLibrary.recognize(gesture); /**< okresla podobienstwo z narysowanym przez gracza wzorem*/
 
         // TODO Zależność między "czarem", a progiem rozpoznawania (prediction.score)
         if (predictions.size() > 0 && predictions.get(0).score > 1.0)

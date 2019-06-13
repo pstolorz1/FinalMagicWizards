@@ -48,8 +48,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
 
     public void NewTrail(float[] positions, float trailLength)
     {
-        // obliczamy dlugosc po ktorej umeiszczamy kolejny efekt
-        float distanceBetweenEffects = trailLength / instantiateNumber;
+        float distanceBetweenEffects = trailLength / instantiateNumber; /**< obliczamy dlugosc po ktorej umeiszczamy kolejny efekt*/
         Log.d("--WTF--","tl " + trailLength + "dbe " + distanceBetweenEffects);
         //trail.clear();
         trail.get(0).Set(getWorldCoords(new Vec2(positions[0], positions[1]))); // początek
@@ -58,8 +57,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         int effects = 1;
         for (int i = 2; i < positions.length; i=i+2)
         {
-            // reszta odl. z poprzednich punktow + dystans miedzy tym pkt a poprzednim
-            Vec2 A = new Vec2(positions[i-2],positions[i-1]);
+            Vec2 A = new Vec2(positions[i-2],positions[i-1]); /** <reszta odl. z poprzednich punktow + dystans miedzy tym pkt a poprzednim*/
             Vec2 B = new Vec2(positions[i],positions[i+1]);
             float distanceBetweenPoints = GetPointsDistance(A,B);
             currUnusedLength = currUnusedLength + distanceBetweenPoints;
