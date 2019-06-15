@@ -25,6 +25,6 @@ public class TestObject
     int id;
 
     public int gethp() {return hp;}
-    public void sethp(int id) {this.hp = hp;}
+    public void sethp(int hp) {this.hp = hp;}
     int hp;
 }

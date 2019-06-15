@@ -40,11 +40,12 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
     final DatabaseReference fbDb = FirebaseDatabase.getInstance().getReference();
     View test;
     int HP = 400;
-    int HP_AI = 400;
+    static int HP_AI = 400;
     int obrazenia_tmp=0;
     int odebrane_tmp=0;
     int abc=0;
     int tmp_id=0;
+    int hp_tmp=400;
 
 
     //! Skonfigurowanie obsługi gestów
@@ -83,13 +84,14 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
             @Override
             public void onClick(View v)
             {
-                resultView.setText("OBRAZENIA GRACZA: " + String.valueOf(400));
-                DamageView.setText("HP KOMPUTERA: " + String.valueOf(0));
-                AIView.setText("OBRAZENIA KOMPUTERA: "+ String.valueOf(400));
-                AIDamageView.setText("HP GRACZA: " + String.valueOf(0));
+                resultView.setText("OBRAZENIA GRACZA: " + String.valueOf(0));
+                DamageView.setText("HP KOMPUTERA: " + String.valueOf(400));
+                AIView.setText("OBRAZENIA KOMPUTERA: "+ String.valueOf(0));
+                AIDamageView.setText("HP GRACZA: " + String.valueOf(400));
                 String key = fbDb.child("ciosy").push().getKey();
-                TestObject to = new TestObject(key, 0, rand_id);
+                TestObject to = new TestObject(key, 0, rand_id, 400);
                 fbDb.child("ciosy").child(key).setValue(to);
+                HP_AI=400;
             }
         });
 
@@ -126,6 +128,7 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
         List<GestureStroke> gs = gesture.getStrokes();
         gLView.myRenderer.NewTrail(gs.get(0).points, gs.get(0).length);
         //resultView.setText(gs.get(0).length + " ");
+
         ArrayList<Prediction> predictions = gLibrary.recognize(gesture); /**< okresla podobienstwo z narysowanym przez gracza wzorem*/
 
         // TODO Zależność między "czarem", a progiem rozpoznawania (prediction.score)
@@ -136,6 +139,9 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
             else if (predictions.get(0).name == "trojkat") result *= 4;
             else result *= 15;
             obrazenia_tmp=result;
+            hp_tmp=hp_tmp-obrazenia_tmp;
+            HP_AI = HP_AI - obrazenia_tmp;
+
 
 
 
@@ -143,11 +149,11 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
         Toast.makeText(getApplicationContext(), "cyk", Toast.LENGTH_LONG).show();
 
         String key = fbDb.child("ciosy").push().getKey();
-        TestObject to = new TestObject(key, obrazenia_tmp, rand_id, 400);
+        TestObject to = new TestObject(key, obrazenia_tmp, rand_id, HP_AI);
         fbDb.child("ciosy").child(key).setValue(to);
 
             Toast.makeText(getApplicationContext(), "cyk2", Toast.LENGTH_LONG).show();
-            if(to.getid()==rand_id){
+
              fbDb.child("ciosy").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -157,11 +163,12 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
 
                     for (DataSnapshot d : dejta) {
                         TestObject t = d.getValue(TestObject.class);
-
+                        if(t.getid()!=rand_id){
                         odebrane_tmp=t.val;
                         tmp_id=t.getid();
                         temp += "READ: " + t.val + " |\n";
-                        AIView.setText("OBRAZENIA PRZECIWNIKA: " + String.valueOf(t.getid()));
+                        AIView.setText("OBRAZENIA PRZECIWNIKA: " + String.valueOf(t.getVal()));
+                        AIDamageView.setText("HP GRACZA: " + String.valueOf(t.gethp()));}
 
 
                     }
@@ -170,7 +177,7 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
                     HP = HP - odebrane_tmp;
                     odebrane_tmp=0;
 
-                    AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));
+                    //AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));
                     TextView t = findViewById(R.id.readDataText);
                     t.setText("Liczba obiektów = " + test + "\n" + temp);
 
@@ -180,13 +187,13 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     Toast.makeText(getApplicationContext(), "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });}
+            });
 
 
 
 
 
-        HP_AI = HP_AI - obrazenia_tmp;
+
         resultView.setText("OBRAZENIA GRACZA: " + obrazenia_tmp);
         DamageView.setText("HP PRZECIWNIKA: " + String.valueOf(HP_AI));
         //int hp_tmp = odebrane_tmp;
