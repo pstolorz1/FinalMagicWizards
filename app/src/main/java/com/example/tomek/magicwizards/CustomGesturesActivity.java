@@ -139,17 +139,17 @@ public class CustomGesturesActivity extends AI implements OnGesturePerformedList
             //hpView.setText(HP);
             HP_AI=HP_AI-result;
             resultView.setText("OBRAZENIA GRACZA: " + result.toString());
-            DamageView.setText("HP KOMPUTERA: " + String.valueOf(HP_AI));
+            DamageView.setText("HP PRZECIWNIKA: " + String.valueOf(HP_AI));
             if(flag)
             {
                 int hp_tmp=easy();
-                AIView.setText("OBRAZENIA KOMPUTERA: "+ String.valueOf(hp_tmp));
+                AIView.setText("OBRAZENIA PRZECIWNIKA: "+ String.valueOf(hp_tmp));
                 HP=HP-hp_tmp;
                 AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));
             }
             else{
                 int hp_tmp=hard();
-                AIView.setText("OBRAZENIA KOMPUTERA: " + String.valueOf(hp_tmp));
+                AIView.setText("OBRAZENIA PRZECIWNIKA: " + String.valueOf(hp_tmp));
                 HP=HP-hp_tmp;
                 AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));}
         }

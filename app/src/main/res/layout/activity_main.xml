@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="HP KOMPUTERA"
+        android:text="HP PRZECIWNIKA"
         app:layout_constraintEnd_toStartOf="@+id/gOverlay"
         app:layout_constraintStart_toEndOf="@+id/gOverlay"
         app:layout_constraintTop_toBottomOf="@+id/resultText" />
@@ -55,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="OBRAŻENIA KOMPUTERA"
+        android:text="OBRAŻENIA PRZECIWNIKA"
         app:layout_constraintEnd_toStartOf="@+id/gOverlay"
         app:layout_constraintStart_toEndOf="@+id/gOverlay"
         app:layout_constraintTop_toBottomOf="@+id/DamageText" />
@@ -69,5 +69,40 @@
         app:layout_constraintEnd_toStartOf="@+id/gOverlay"
         app:layout_constraintStart_toEndOf="@+id/gOverlay"
         app:layout_constraintTop_toBottomOf="@+id/AIText" />
+
+    <Button
+        android:id="@+id/testSending"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Reset"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.938"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
+    <TextView
+        android:id="@+id/readDataText"
+        android:layout_width="357dp"
+        android:layout_height="629dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testSending"
+        app:layout_constraintVertical_bias="0.083"
+        tools:visibility="invisible" />
 
 </android.support.constraint.ConstraintLayout>

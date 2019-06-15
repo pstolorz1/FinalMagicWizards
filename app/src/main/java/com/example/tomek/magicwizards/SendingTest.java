@@ -1,8 +1,16 @@
 package com.example.tomek.magicwizards;
 
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureStroke;
+import android.gesture.Prediction;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -15,64 +23,180 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class SendingTest extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.example.tomek.magicwizards.AI.flag;
+
+public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGesturePerformedListener {
+
+    private GestureLibrary gLibrary;
+    private MyGLSurfaceView gLView;
+    private TextView resultView;
+    private TextView hpView;
+    private TextView AIView;
+    private TextView AIDamageView;
+    private TextView DamageView;
+    final DatabaseReference fbDb = FirebaseDatabase.getInstance().getReference();
+    View test;
+    int HP = 400;
+    int HP_AI = 400;
+    int obrazenia_tmp=0;
+    int odebrane_tmp=0;
+    int abc=0;
+    int tmp_id=0;
+
+
+    //! Skonfigurowanie obsługi gestów
+    /*!
+    Wczytanie pliku z gestami, ustawienie kontrolki wyświetlającej openGL
+    */
+    private void gestureSetup() {
+        gLibrary =
+                GestureLibraries.fromRawResource(this,
+                        R.raw.gestures);
+        if (!gLibrary.load()) {
+            //Log.d("Test", "FINISH");
+            finish();
+        }
+        //Log.d("Test", "DALEJ");
+        GestureOverlayView gOverlay = findViewById(R.id.gOverlay);
+        gOverlay.addOnGesturePerformedListener(this);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sending_test);
+        setContentView(R.layout.activity_main);
         Button b = findViewById(R.id.testSending);
-        // definicja bazy danych
-        final DatabaseReference fbDb = FirebaseDatabase.getInstance().getReference();
+        gLView = findViewById(R.id.openGLOverlay);
+        resultView = findViewById(R.id.resultText);
+        AIView = findViewById(R.id.AIText);
+        test = findViewById(R.id.gOverlay);
+        AIDamageView = findViewById(R.id.AIDamageText);
+        DamageView = findViewById(R.id.DamageText);
 
-        // klikniecie przycisku testowego
         b.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
-                // bierze klucz wygenerowany automatycznie przez baze , jesli nie ma tablicy o nazwie "ciosy tworzy ją"
+                resultView.setText("OBRAZENIA GRACZA: " + String.valueOf(400));
+                DamageView.setText("HP KOMPUTERA: " + String.valueOf(0));
+                AIView.setText("OBRAZENIA KOMPUTERA: "+ String.valueOf(400));
+                AIDamageView.setText("HP GRACZA: " + String.valueOf(0));
                 String key = fbDb.child("ciosy").push().getKey();
-                // tworzenie nwoego obiektu
-                TestObject to = new TestObject(key, 99);
-                // ddoawanie teo obiektu do bazy pod klcuzem wygenerowanym wczesniej
+                TestObject to = new TestObject(key, 0, rand_id);
                 fbDb.child("ciosy").child(key).setValue(to);
-
             }
         });
 
-        //nasluchuje czy wartosci w tablicy "ciosy" zostaly zmienione (a wlasciwie czy zostala dodana nowa wartosc)
-        fbDb.child("ciosy").addValueEventListener(new ValueEventListener()
-        {
 
+        test.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                // getChildrenCount zwraca ilosc wpisow w tablicy "ciosy"
-                long test = dataSnapshot.getChildrenCount();
-                //cos jakby lista rekordow z tablicy
-                Iterable<DataSnapshot> dejta = dataSnapshot.getChildren();
-                String temp = "";
-                // petla ktora iteruje opo kazdym rekordzie z bazy
-                for(DataSnapshot d : dejta)
-                {
-                    // wrzucanie do obiektu t rekordu z bazy
-                    TestObject t = d.getValue(TestObject.class);
-                    // obiekt jest juz gotowy , tu tylko dodaje pole val do stringa zeby go wyswietlic
-                    temp += "READ: " + t.val + " |\n";
-                }
-                TextView t = findViewById(R.id.readDataText);
-                //wyswietlanie lcizby rekordow i cih wartosci
-                t.setText("Liczba obiektów = " + test + "\n" + temp);
-            }
-            // w przypadku bledu wyswietla toasta
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
-                Toast.makeText(getApplicationContext(),"Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            public boolean onTouch(View v, MotionEvent event) {
+
+                gLView.myRenderer.ShowStar(event.getX(), event.getY());
+                return true;
 
             }
         });
+        gestureSetup();
+
+
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gLView.onPause();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gLView.onResume();
+
+    }
+
+    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+        List<GestureStroke> gs = gesture.getStrokes();
+        gLView.myRenderer.NewTrail(gs.get(0).points, gs.get(0).length);
+        //resultView.setText(gs.get(0).length + " ");
+        ArrayList<Prediction> predictions = gLibrary.recognize(gesture); /**< okresla podobienstwo z narysowanym przez gracza wzorem*/
+
+        // TODO Zależność między "czarem", a progiem rozpoznawania (prediction.score)
+        if (predictions.size() > 0 && predictions.get(0).score > 1.0)
+        {
+            Integer result = (int) (predictions.get(0).score);
+            if (predictions.get(0).name == "kwadrat") result *= 5;
+            else if (predictions.get(0).name == "trojkat") result *= 4;
+            else result *= 15;
+            obrazenia_tmp=result;
+
+
+
+        }
+        Toast.makeText(getApplicationContext(), "cyk", Toast.LENGTH_LONG).show();
+
+        String key = fbDb.child("ciosy").push().getKey();
+        TestObject to = new TestObject(key, obrazenia_tmp, rand_id, 400);
+        fbDb.child("ciosy").child(key).setValue(to);
+
+            Toast.makeText(getApplicationContext(), "cyk2", Toast.LENGTH_LONG).show();
+            if(to.getid()==rand_id){
+             fbDb.child("ciosy").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    long test = dataSnapshot.getChildrenCount();
+                    Iterable<DataSnapshot> dejta = dataSnapshot.();
+                    String temp = "";
+
+                    for (DataSnapshot d : dejta) {
+                        TestObject t = d.getValue(TestObject.class);
+
+                        odebrane_tmp=t.val;
+                        tmp_id=t.getid();
+                        temp += "READ: " + t.val + " |\n";
+                        AIView.setText("OBRAZENIA PRZECIWNIKA: " + String.valueOf(t.getid()));
+
+
+                    }
+
+                    abc++;
+                    HP = HP - odebrane_tmp;
+                    odebrane_tmp=0;
+
+                    AIDamageView.setText("HP GRACZA: " + String.valueOf(HP));
+                    TextView t = findViewById(R.id.readDataText);
+                    t.setText("Liczba obiektów = " + test + "\n" + temp);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getApplicationContext(), "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });}
+
+
+
+
+
+        HP_AI = HP_AI - obrazenia_tmp;
+        resultView.setText("OBRAZENIA GRACZA: " + obrazenia_tmp);
+        DamageView.setText("HP PRZECIWNIKA: " + String.valueOf(HP_AI));
+        //int hp_tmp = odebrane_tmp;
+       // AIView.setText("OBRAZENIA KOMPUTERA: " + String.valueOf(to.val));
+
+
+            /*if (HP < 0)
+                setContentView(R.layout.activity_lost);
+            if (HP_AI < 0)
+                setContentView(R.layout.activity_win);*/
+    }
+
 }

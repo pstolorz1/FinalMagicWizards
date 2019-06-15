@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SendingTest"></activity>
         <activity android:name=".CreditsScene" />
+        <activity android:name=".ChooseMenu" />
         <activity android:name=".ConnectMenu" />
         <activity
             android:name=".CustomGesturesActivity"

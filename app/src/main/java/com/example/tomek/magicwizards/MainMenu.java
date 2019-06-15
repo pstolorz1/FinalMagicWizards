@@ -65,7 +65,7 @@ public class MainMenu extends AppCompatActivity {
      *
      */
     public void openMainMenu(){
-        Intent intent = new Intent(this, ConnectMenu.class);
+        Intent intent = new Intent(this, ChooseMenu.class);
         startActivity(intent);
     }
     /**  Funkcja przenoszaca z jednego activity do drugiego
@@ -73,7 +73,7 @@ public class MainMenu extends AppCompatActivity {
      */
     public void openCredits()
     {
-        Intent intent = new Intent(this, SendingTest.class);
+        Intent intent = new Intent(this, CreditsScene.class);
         startActivity(intent);
         //Intent intent = new Intent(this, CreditsScene.class);
         //startActivity(intent);
