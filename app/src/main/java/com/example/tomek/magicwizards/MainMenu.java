@@ -17,7 +17,6 @@ import java.util.Arrays;
 /**  Klasa obslugujaca menu
  *
  */
-
 public class MainMenu extends AppCompatActivity {
 
     private Button pressPlay; /**< guzik do wlaczenia gry*/
