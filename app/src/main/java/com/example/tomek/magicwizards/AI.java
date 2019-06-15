@@ -3,9 +3,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.TextView;
-/**  Klasa reprezentujaca poziomy sztucznej inteligencji
+
+//!  Klasa reprezentujaca poziomy sztucznej inteligencji
+/*!
  */
 public class AI extends AppCompatActivity {
+
+    //! Flaga, ktora ustawia poziom trudnosci
     static public boolean flag;
     TextView view_data;
 
@@ -14,7 +18,8 @@ public class AI extends AppCompatActivity {
      */
     Integer easy()
     {
-        int x = (int)(Math.random() * 49 + 1); /**< Wartosci, ktore moze losowac komputer w zaleznosci od poziomu trudnosci*/
+        //! Wartosci, ktore moze losowac komputer w zaleznosci od poziomu trudnosci
+        int x = (int)(Math.random() * 50 + 10); /**< Wartosci, ktore moze losowac komputer w zaleznosci od poziomu trudnosci*/
         return(x);
     }
 
@@ -23,10 +28,10 @@ public class AI extends AppCompatActivity {
      */
     Integer hard()
     {
-        int x = (int)(Math.random() * 49 + 50); /**< Wartosci, ktore moze losowac komputer w zaleznosci od poziomu trudnosci*/
+        //! Wartosci, ktore moze losowac komputer w zaleznosci od poziomu trudnosci
+        int x = (int)(Math.random() * 80 + 80); /**< Wartosci, ktore moze losowac komputer w zaleznosci od poziomu trudnosci*/
         return(x);
     }
 
-    Integer ez(int x){return x;}
 
 }

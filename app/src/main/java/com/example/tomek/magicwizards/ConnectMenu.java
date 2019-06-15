@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-/**  Klasa w ktorej wybieramy poziom sztucznej inteligencji
- *
+//!  Klasa w ktorej wybieramy poziom sztucznej inteligencji
+/*!
  */
 public class ConnectMenu extends AI {
 
