@@ -152,7 +152,7 @@ public class SendingTest extends ChooseMenu implements GestureOverlayView.OnGest
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     long test = dataSnapshot.getChildrenCount();
-                    Iterable<DataSnapshot> dejta = dataSnapshot.();
+                    Iterable<DataSnapshot> dejta = dataSnapshot.getChildren();
                     String temp = "";
 
                     for (DataSnapshot d : dejta) {
